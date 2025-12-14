@@ -1,11 +1,14 @@
-﻿# Build stage
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy everything
 COPY . .
 
-# Publish the app (adjust csproj name if needed)
+# IMPORTANT: move into the project folder where the .csproj exists
+WORKDIR /src/BlazorApp2
+
+# Publish the app
 RUN dotnet publish BlazorApp2.csproj -c Release -o /app/publish
 
 # Run stage
