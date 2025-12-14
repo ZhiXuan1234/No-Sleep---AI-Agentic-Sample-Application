@@ -1,24 +1,18 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copy everything
 COPY . .
 
-# IMPORTANT: move into the project folder where the .csproj exists
 WORKDIR /src/BlazorApp2
-
-# Publish the app
 RUN dotnet publish BlazorApp2.csproj -c Release -o /app/publish
 
 # Run stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
-# Render uses PORT env var
 ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT}
 
 COPY --from=build /app/publish .
-
-# Start the app
 ENTRYPOINT ["dotnet", "BlazorApp2.dll"]
+
